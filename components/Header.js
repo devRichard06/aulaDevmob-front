@@ -7,10 +7,10 @@ const Header = () => {
 			<View style={styles.avatar}>
 				<Image
 					style={styles.avatarImg}
-					source='https://avatars.githubusercontent.com/u/4259630?v=4'
+					source='https://www.areavip.com.br/wp-content/uploads/2023/06/roger-guedes-1200x806.jpg'
 				/>
 			</View>
-			<Text style={styles.boasvindas}>Renan Cavichi</Text>
+			<Text style={styles.boasvindas}>Rogério Guedes</Text>
 		</View>
 	)
 }
