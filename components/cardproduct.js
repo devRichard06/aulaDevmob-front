@@ -2,19 +2,18 @@ import {Text, View, StyleSheet} from 'react-native'
 import { Image } from 'expo-image'
 import H4 from './ui/H4'
 
-const Cardproduct = ({product}) => {
+const CardProduct = ({product}) => {
   return (
     <View style={styles.card}>
-        <View style={styles.avatar}>
+        <View style={styles.photo}>
             <Image
-                style={styles.avatarImg}
+                style={styles.photoImg}
                 source={product.photo}
             />
         </View>
         <View>
             <H4>{product.name}</H4>
-            <Text style={styles.email}>Preço: {product.price}</Text>
-            <Text style={styles.email}>Quantidade: {product.quantity}</Text>
+            <Text style={styles.price}>R$ {product.price}</Text>
         </View>
     </View>
   )
@@ -22,26 +21,24 @@ const Cardproduct = ({product}) => {
 
 const styles = StyleSheet.create({
     card: {
-        flexDirection: 'row',
         alignItems: 'center',
-        width: 300,
-        height: 100,
+        width: 200,
+        height: 130,
         backgroundColor: '#FFF',
         borderRadius: 20,
         marginVertical: 10,
         marginHorizontal: 10
     },
-    avatar: {
+    photo: {
         marginHorizontal: 10
     },
-    avatarImg: {
+    photoImg: {
         width: 70,
         height: 70,
-       
     },
-    email: {
+    price: {
         marginTop: 4
     }
 })
 
-export default Cardproduct
+export default CardProduct

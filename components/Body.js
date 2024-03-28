@@ -1,178 +1,79 @@
-import { View, StyleSheet, FlatList, Text, TextInput } from 'react-native'
+import {View, StyleSheet, FlatList, Text, Platform} from 'react-native'
 import { useEffect, useState } from 'react'
 import H1 from './ui/H1'
 import CardUser from './CardUser'
-import Cardproduct from './cardproduct'
 import Button from './ui/Button'
-
-
-
-
+import { useNavigation } from '@react-navigation/native'
+import Header from './Header'
+import Footer from './Footer'
 
 const Body = () => {
-
-  
-  const [txtName, setTxtName] = useState('')
-
-  const [txtEmail, setTxtEmail] = useState('')
-
-  const [txtAvatar, setTxtAvatar] = useState('')
-
   const [users, setUsers] = useState([])
+  const navigation = useNavigation()
 
-  const [products, setProducts] = useState([])
-
-  const [counter, setCounter] = useState(0)
-
-
-
+  console.log('Plataforma Atual: ', Platform.OS)
 
   const getUsers = async () => {
-    try {
-      const result = await fetch('https://auladevmob-back.onrender.com/user')
+    try{
+      const result = await fetch('https://backend-api-express-1sem2024-rbd1.onrender.com/user?34')
       const data = await result.json()
       console.log(data.success)
       setUsers(data.users)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-  const getProducts = async () => {
-    try {
-      const result = await fetch('https://auladevmob-back.onrender.com/product')
-      const data = await result.json()
-      console.log(data.success)
-      setProducts(data.products)
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-  const postUser = async () =>{
-    try{
-      const result = await fetch('https://auladevmob-back.onrender.com/user', {
-        method: "POST",
-        headers :{
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({name: txtName, email: txtEmail, avatar: txtAvatar})
-      })
-      const data = await result.json()
-      console.log(data)
-      getUsers()
     } catch (error){
-      console.log('Error postUser ' +error.message)
+      console.log('Error getUsers ' + error.message)
     }
-  } 
+  }
 
   useEffect(()=>{
     getUsers()
-    getProducts()
   },[])
- 
-
 
   return (
-    <View style={styles.body}>
-
-      <TextInput 
-      style= {styles.input} 
-      onChangeText={setTxtName}
-      value={txtName}    
-      />
-
-<TextInput 
-      style= {styles.input} 
-      onChangeText={setTxtEmail}
-      value={txtEmail}    
-      />
-
-<TextInput 
-      style= {styles.input} 
-      onChangeText={setTxtAvatar}
-      value={txtAvatar}    
-      />
-
-<Button 
-      title= 'Cadastrar Usuário'
-      onPress={postUser}
-      
-      />
-      
-      <Button 
-      title= 'Adicionar +2'
-      onPress={() => setCounter(counter + 2)}
-      />
-
-
-      <Button 
-      title= 'Adicionar +1'
-      onPress={() => setCounter(counter + 1)}
-      />
-
-      <Text style={{color: '#FFF'}}>Valor: {counter}</Text>
-
-      <H1 style={styles.usuariosH1}>Usuários</H1>
-
-      <View style={styles.listUser}>
-        {users.length ? <FlatList
-          data={users}
-          renderItem={({ item }) => <CardUser user={item} />}
-          keyExtractor={item => item.id}
-          horizontal={true}
-        /> : <Text style={{color: '#FFF'}}>Loading......</Text>}
-        
-         </View>
-         <H1 style={styles.usuariosH1}>Produtos</H1>
-        <View style={styles.listProduct}>
-
-        {products.length ? <FlatList
-            data={products}
-            renderItem={({ item }) => <Cardproduct product={item} />}
-            keyExtractor={item => item.id}
-            horizontal={true}
-          />     
-        : <Text style={{color: '#FFF'}}>Loading......</Text>}
-
+    <View style={{flex: 1}}>
+        <View style={styles.titleAdd}>
+          <H1 style={styles.usuariosH1}>Users</H1>
+          <Button title="Add User" onPress={() => navigation.navigate('Cadastrar', {users, setUsers})} />
         </View>
-     
+        
+        <View style={styles.listUser}>
+            {users.length ? 
+              <FlatList
+                style={{width: '100%'}}
+                data={users}
+                renderItem={({item}) => <CardUser user={item} />}
+                keyExtractor={item => item.id}
+                ListHeaderComponent={Header}
+                ListFooterComponent={Footer}
+                contentContainerStyle={styles.flatListUser}
+              /> : 
+              <Text style={{color: '#FFF'}}>Loading...</Text>}
+        </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  body: {
-    flex: 3,
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  usuariosH1: {
-    marginBottom: 10,
-    color: "#FFF"
-  },
-  listUser: {
-    height: 120
-  },
-
-  listProduct: {
-    height: 120, 
-    marginTop: 10
-  },
-
-  input: {
-    height: 40,
-    width: 300,
-    backgroundColor: "#FFF",
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
+    usuariosH1: {
+      marginBottom: 20,
+      color: "#FFF",
+    },
+    listUser:{
+      display: 'flex',
+      width: '100%',
+      alignItems: 'center',
+      marginBottom: 20,
+      maxHeight: Platform.OS === 'web' ? '90vh' : null
+    },
+    titleAdd:{
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      paddingHorizontal: 20,
+    },
+    flatListUser: {
+      alignSelf: 'center'
+    }
   }
-
-
-
-}
 )
 
 export default Body
